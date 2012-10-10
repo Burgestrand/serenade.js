@@ -197,6 +197,15 @@ describe 'Serenade.Model', ->
         @belongsTo('post', serializeId: true, as: -> Post)
       comment = new Comment(post: { id: 5, body: "foo" })
       expect(comment.toJSON().postId).to.eql(5)
+    it 'can be unassigned once assigned', ->
+      class Post extends Serenade.Model
+        @hasMany "comments", as: -> Comment
+      class Comment extends Serenade.Model
+        @belongsTo "post", inverseOf: "comments", as: -> Post
+      post = new Post()
+      comment = new Comment(post: post)
+      comment.post = undefined
+      expect(comment.post).to.eql(undefined)
     it 'can add itself to its inverse relation', ->
       class Comment extends Serenade.Model
         @belongsTo "post", inverseOf: "comments", as: -> Post
@@ -226,6 +235,15 @@ describe 'Serenade.Model', ->
       expect(post.comments.length).to.eql(0)
       expect(otherPost.comments[0]).to.eql(comment)
       expect(otherPost.comments.length).to.eql(1)
+    it 'can be unassigned once assigned when it has an inverse relation', ->
+      class Post extends Serenade.Model
+        @hasMany "comments", as: -> Comment
+      class Comment extends Serenade.Model
+        @belongsTo "post", inverseOf: "comments", as: -> Post
+      post = new Post()
+      comment = new Comment(post: post)
+      comment.post = undefined
+      expect(comment.post).to.eql(undefined)
 
   describe '.hasMany', ->
     it 'allows objects to be added and retrieved', ->

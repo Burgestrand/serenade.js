@@ -129,11 +129,11 @@ Associations =
   belongsTo: (name, attributes={}) ->
     extend attributes,
       set: (model) ->
-        if model.constructor is Object and attributes.as
+        if model?.constructor is Object and attributes.as
           model = new (attributes.as())(model)
         previous = @attributes[name]
         @attributes[name] = model
-        if attributes.inverseOf and not model[attributes.inverseOf].includes(this)
+        if model? and attributes.inverseOf and not model[attributes.inverseOf].includes(this)
           previous[attributes.inverseOf].delete(this) if previous
           model[attributes.inverseOf].push(this)
     @property name, attributes
