@@ -29,11 +29,15 @@ class Model
 
   @delegate = (names..., options) ->
     to = options.to
+    prefix = options.prefix
+    prefix and= name if typeof prefix isnt "string"
+    suffix = options.suffix
+    suffix and= name if typeof suffix isnt "string"
     for name in names
       do (name) =>
         propName = name
-        propName = to + capitalize(name) if options.prefix
-        propName = propName + capitalize(to) if options.suffix
+        propName = prefix + capitalize(propName) if prefix
+        propName = propName + capitalize(suffix) if suffix
         @property propName, dependsOn: "#{to}.#{name}", get: -> @[to]?[name]
 
   @uniqueId: ->

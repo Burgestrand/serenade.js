@@ -371,6 +371,20 @@ describe 'Serenade.Model', ->
       post = new Post(author: { name: "Jonas", email: "jonas@elabs.se" })
       expect(post.nameAuthor).to.eql("Jonas")
       expect(post.emailAuthor).to.eql("jonas@elabs.se")
+    it "can set prefix as a string", ->
+      author = new Serenade.Model(name: "Jonas", email: "jonas@elabs.se")
+      class Post extends Serenade.Model
+        @delegate "name", "email", to: "author", prefix: "owner"
+      post = new Post(author: { name: "Jonas", email: "jonas@elabs.se" })
+      expect(post.ownerName).to.eql("Jonas")
+      expect(post.ownerEmail).to.eql("jonas@elabs.se")
+    it "can set suffix as a string", ->
+      author = new Serenade.Model(name: "Jonas", email: "jonas@elabs.se")
+      class Post extends Serenade.Model
+        @delegate "name", "email", to: "author", suffix: "owner"
+      post = new Post(author: { name: "Jonas", email: "jonas@elabs.se" })
+      expect(post.nameOwner).to.eql("Jonas")
+      expect(post.emailOwner).to.eql("jonas@elabs.se")
 
   describe "#id", ->
     it "updates identify map when changed", ->
